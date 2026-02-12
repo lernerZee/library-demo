@@ -9,7 +9,7 @@ hosts:
 
   - name: windows-host
     base_box:
-      image: Windows-Server-2022-PW
+      image: 2ef333a4-8592-4e2b-9472-331d8661748d
       man_user: Administrator
     flavor: standard.small
 
