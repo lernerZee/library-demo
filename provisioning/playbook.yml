@@ -3,7 +3,7 @@
 - name: disable qxl
   hosts:
     - routers
-    - hosts
+    - server
   gather_facts: yes
   become: yes
   tasks:
@@ -21,19 +21,20 @@
       flag_2: "{{ root_flag }}"
 
 - name: set up client
-  hosts: client
-  become: yes
+  hosts: windows-host
+  become: no
   roles:
     - name: user-access
       user_access_username: user
       user_access_password: Password123
-      user_access_sudo: True
+      user_access_sudo: False
     - name: client
 
 - name: set up command logging
-  hosts: hosts
+  hosts: server
   become: yes
   roles:
     - role: sandbox-logging
       slf_destination_port: '{% if hostvars["man"] is defined -%} 514 {%- else -%} 515 {%- endif %}'
+
 ...
