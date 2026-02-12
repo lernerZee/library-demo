@@ -15,20 +15,23 @@
   hosts: server
   become: yes
   roles:
-    - name: server
+    - role: server
       telnet_port: "{{ telnet_port }}"
       flag: "{{ alice_flag }}"
       flag_2: "{{ root_flag }}"
 
-- name: set up client
+# ✅ Windows client (NO user-access role here)
+- name: set up windows client
   hosts: windows-host
-  become: no
-  roles:
-    - name: user-access
-      user_access_username: user
-      user_access_password: Password123
-      user_access_sudo: False
-    - name: client
+  gather_facts: yes
+  tasks:
+    - name: Create local Windows user
+      ansible.windows.win_user:
+        name: user
+        password: Password123
+        state: present
+        groups:
+          - Users
 
 - name: set up command logging
   hosts: server
@@ -36,5 +39,3 @@
   roles:
     - role: sandbox-logging
       slf_destination_port: '{% if hostvars["man"] is defined -%} 514 {%- else -%} 515 {%- endif %}'
-
-...
