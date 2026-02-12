@@ -5,12 +5,14 @@ hosts:
     base_box:
       image: ubuntu-noble-x86_64
       mgmt_user: ubuntu
+      mgmt_protocol: ssh
     flavor: standard.small
 
   - name: windows-host
     base_box:
-      image: 2ef333a4-8592-4e2b-9472-331d8661748d
+      image: Windows-Server-2022-CRCZ
       mgmt_user: Administrator
+      mgmt_protocol: winrm
     flavor: standard.small
 
 routers:
@@ -18,6 +20,7 @@ routers:
     base_box:
       image: debian-12-x86_64
       mgmt_user: debian
+      mgmt_protocol: ssh
     flavor: standard.small
 
 networks:
