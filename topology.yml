@@ -4,26 +4,26 @@ hosts:
   - name: server
     base_box:
       image: ubuntu-noble-x86_64
-      man_user: ubuntu
+      main_user: ubuntu
     flavor: standard.small
 
   - name: windows-host
     base_box:
       image: 2ef333a4-8592-4e2b-9472-331d8661748d
-      man_user: Administrator
+      main_user: Administrator
     flavor: standard.small
 
 routers:
   - name: router
     base_box:
       image: debian-12-x86_64
-      man_user: debian
+      main_user: debian
     flavor: standard.small
 
 networks:
   - name: server-switch
     cidr: 192.168.20.0/24
-    accessible_by_user: False
+    accessible_by_user: false
 
   - name: client-switch
     cidr: 192.168.30.0/24
@@ -32,7 +32,7 @@ net_mappings:
   - host: server
     network: server-switch
     ip: 192.168.20.5
-  - host: client
+  - host: windows-host
     network: client-switch
     ip: 192.168.30.5
 
