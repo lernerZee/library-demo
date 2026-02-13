@@ -1,5 +1,9 @@
 ---
 
+# ==============================
+# Disable QXL (Linux only)
+# ==============================
+
 - name: disable qxl
   hosts:
     - routers
@@ -11,6 +15,10 @@
         name: disable-qxl
       when: ansible_os_family == 'Debian'
 
+
+# ==============================
+# Linux Server Setup
+# ==============================
 
 - name: set up server
   hosts: server
@@ -24,6 +32,7 @@
 
 # ==============================
 # Windows Client Configuration
+# (No external collections required)
 # ==============================
 
 - name: set up windows client
@@ -32,36 +41,25 @@
   tasks:
 
     - name: Create local Windows user
-      ansible.windows.win_user:
+      win_user:
         name: user
         password: Password123
         state: present
         groups:
           - Users
 
-    - name: Enable Remote Desktop
-      ansible.windows.win_regedit:
-        path: HKLM:\System\CurrentControlSet\Control\Terminal Server
-        name: fDenyTSConnections
-        data: 0
-        type: dword
+    - name: Enable Remote Desktop in registry
+      win_shell: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' `
+        -Name "fDenyTSConnections" -Value 0
 
     - name: Enable RDP firewall rule
-      ansible.windows.win_firewall_rule:
-        name: RemoteDesktop
-        localport: 3389
-        protocol: TCP
-        direction: in
-        action: allow
-        state: present
-        enabled: yes
+      win_shell: |
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
     - name: Add user to Remote Desktop Users group
-      ansible.windows.win_group_membership:
-        name: "Remote Desktop Users"
-        members:
-          - user
-        state: present
+      win_shell: |
+        Add-LocalGroupMember -Group "Remote Desktop Users" -Member "user"
 
 
 # ==============================
