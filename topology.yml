@@ -15,6 +15,13 @@ hosts:
       mgmt_protocol: winrm
     flavor: standard.medium
 
+  - name: nextcloud
+    base_box:
+      image: ubuntu-noble-x86_64
+      mgmt_user: ubuntu
+      mgmt_protocol: ssh
+    flavor: standard.small
+
 routers:
   - name: router
     base_box:
@@ -40,6 +47,10 @@ net_mappings:
   - host: windows-host
     network: client-switch
     ip: 192.168.30.5
+
+  - host: nextcloud
+    network: server-switch
+    ip: 192.168.20.6
 
 router_mappings:
   - router: router
